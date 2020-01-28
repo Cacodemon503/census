@@ -12,8 +12,8 @@ print("""
 ▄█▀█████▐▌─▀─▐
 ▀─▄██▀██▀█▀▄▄▀ Don't forget to create token: help.github.com
 							""")
-
-choice = str(input("Please choose [r] for repo & [f] for fork or [mf/mr] for manual setup: "))
+choice = str(input("""Please choose [r] for repo & [f] for fork or [mf/mr] for manual setup 
+                      or [anon] to get anonymous repo contributors: """))
 
 if choice == str("r"):
     start = time.monotonic()
@@ -164,6 +164,37 @@ elif choice == str("mf"):
     print ("Writing completed")
     result = time.monotonic() - start
     print("Program time: " + str(result) + " seconds.")
+
+elif choice == str("anon"):
+    start = time.monotonic()
+    token = open("token.txt" , "r").read() 
+    headers = {"Authorization": "token " + token}
     
+    print("""This is a tracker of anonymous contributors, please note that 
+             the final data will be different from the regular output""")
+    user_input = urllib.parse.urlsplit(str(input("Paste URL: "))).path
+    fragment = user_input.split("/")
+    
+    URL = "https://api.github.com/repos/" + str(fragment[1]) + "/" + str(fragment[2]) + "/contributors?anon=1" # ?per_page=100&page=1&anon=1
+    r = requests.get(url = URL, headers = headers)
+    collaborators = r.json()
+
+    while "next" in r.links.keys():
+        r = requests.get(r.links["next"]["url"], headers = headers)
+        collaborators.extend(r.json())
+    
+    anons = [i for i in collaborators if i["type"] == "Anonymous"]
+    keys = anons[0].keys()
+
+    with open("{}.txt".format(str(input("Enter file name: "))), "w", encoding = "utf-8") as filename:
+        writer = csv.DictWriter(filename, delimiter=";", fieldnames=keys)
+        writer.writeheader()
+        writer.writerows(tqdm(anons))
+                
+    print(str("Users parsed: ") + str(len(anons)))
+    print ("Writing completed")
+    result = time.monotonic() - start
+    print("Program time: " + str(result) + " seconds.")
+
 else:
     print("Please restart")
