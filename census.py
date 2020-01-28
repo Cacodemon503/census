@@ -61,7 +61,7 @@ elif choice == str("f"):
     user_input = urllib.parse.urlsplit(str(input("Paste URL: "))).path
     fragment = user_input.split("/")
     
-    URL = "https://api.github.com/repos/" + str(fragment[2]) + "/" + str(fragment[2]) + "/forks" # ?per_page=100&page=1
+    URL = "https://api.github.com/repos/" + str(fragment[1]) + "/" + str(fragment[2]) + "/forks" # ?per_page=100&page=1
     r = requests.get(url = URL, headers=headers)
     forkers = r.json()
 #     print(URL)
