@@ -42,9 +42,9 @@ if choice == str("r"):
             r = requests.get(url = URL)
             data = r.json()
             URL = "https://api.github.com/users/" + i + "/repos"
-            r = requests.get(url = URL, headers=headers)
+            r = requests.get(url = URL, headers = headers)
             user_repos = r.json()
-            languages = [i["language"] for i in user_repos if i["language"] != None if i["language"] != "Makefile"]   # searchnig languages
+            languages = [i["language"] for i in user_repos if i["language"] != None if i["language"] != "Makefile"]   # searching languages
             langs_counted = {i: f"{round(languages.count(i)/len(languages)*100, 2)}%" for i in set(languages)} # counting % languages
             readout = {'Username': data['login'], 'Full Name': data['name'], 'Email': data['email'],
                         'Location': data['location'], 'Company': data['company'], 'Hireable Status': data['hireable'],
@@ -86,9 +86,9 @@ elif choice == str("f"):
             r = requests.get(url = URL, headers = headers)
             data = r.json()
             URL = "https://api.github.com/users/" + i + "/repos"
-            r = requests.get(url = URL, headers=headers)
+            r = requests.get(url = URL, headers = headers)
             user_repos = r.json()
-            languages = [i["language"] for i in user_repos if i["language"] != None if i["language"] != "Makefile"]   # searchnig languages
+            languages = [i["language"] for i in user_repos if i["language"] != None if i["language"] != "Makefile"]   # searching languages
             langs_counted = {i: f"{round(languages.count(i)/len(languages)*100, 2)}%" for i in set(languages)}
             readout = {'Username': data['login'], 'Full Name': data['name'], 'Email': data['email'],
                         'Location': data['location'], 'Company': data['company'], 'Hireable Status': data['hireable'],
@@ -127,9 +127,9 @@ elif choice == str("mr"):
             r = requests.get(url = URL, headers = headers)
             data = r.json()
             URL = "https://api.github.com/users/" + i + "/repos"
-            r = requests.get(url = URL, headers=headers)
+            r = requests.get(url = URL, headers = headers)
             user_repos = r.json()
-            languages = [i["language"] for i in user_repos if i["language"] != None if i["language"] != "Makefile"]   # searchnig languages
+            languages = [i["language"] for i in user_repos if i["language"] != None if i["language"] != "Makefile"]   # searching languages
             langs_counted = {i: f"{round(languages.count(i)/len(languages)*100, 2)}%" for i in set(languages)}
             readout = {'Username': data['login'], 'Full Name': data['name'], 'Email': data['email'],
                         'Location': data['location'], 'Company': data['company'], 'Hireable Status': data['hireable'],
@@ -169,9 +169,9 @@ elif choice == str("mf"):
             r = requests.get(url = URL, headers = headers)
             data = r.json()
             URL = "https://api.github.com/users/" + i + "/repos"
-            r = requests.get(url = URL, headers=headers)
+            r = requests.get(url = URL, headers = headers)
             user_repos = r.json()
-            languages = [i["language"] for i in user_repos if i["language"] != None if i["language"] != "Makefile"]   # searchnig languages
+            languages = [i["language"] for i in user_repos if i["language"] != None if i["language"] != "Makefile"]   # searching languages
             langs_counted = {i: f"{round(languages.count(i)/len(languages)*100, 2)}%" for i in set(languages)}
             readout = {'Username': data['login'], 'Full Name': data['name'], 'Email': data['email'],
                         'Location': data['location'], 'Company': data['company'], 'Hireable Status': data['hireable'],
