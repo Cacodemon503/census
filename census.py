@@ -39,11 +39,16 @@ if choice == str("r"):
         writer = None 
         for i in tqdm(names):
             URL = "https://api.github.com/users/" + i
-            r = requests.get(url = URL, headers = headers)
+            r = requests.get(url = URL)
             data = r.json()
+            URL = "https://api.github.com/users/" + i + "/repos"
+            r = requests.get(url = URL, headers=headers)
+            user_repos = r.json()
+            languages = [i["language"] for i in user_repos if i["language"] != None if i["language"] != "Makefile"]   # searchnig languages
+            langs_counted = {i: f"{round(languages.count(i)/len(languages)*100, 2)}%" for i in set(languages)} # counting % languages
             readout = {'Username': data['login'], 'Full Name': data['name'], 'Email': data['email'],
-                   'Location': data['location'], 'Company': data['company'], 'Hireable Status': data['hireable'],
-                   'Profile Summary': 'https://profile-summary-for-github.com/user/' + data['login']}
+                        'Location': data['location'], 'Company': data['company'], 'Hireable Status': data['hireable'],
+                        'Languages': langs_counted, 'Profile Summary': 'https://profile-summary-for-github.com/user/' + data['login']}
             if not writer:
                 writer = csv.DictWriter(filename, delimiter=';', fieldnames=readout.keys())
             writer.writerow(readout)
@@ -61,7 +66,7 @@ elif choice == str("f"):
     user_input = urllib.parse.urlsplit(str(input("Paste URL: "))).path
     fragment = user_input.split("/")
     
-    URL = "https://api.github.com/repos/" + str(fragment[2]) + "/" + str(fragment[2]) + "/forks" # ?per_page=100&page=1
+    URL = "https://api.github.com/repos/" + str(fragment[1]) + "/" + str(fragment[2]) + "/forks" # ?per_page=100&page=1
     r = requests.get(url = URL, headers=headers)
     forkers = r.json()
 #     print(URL)
@@ -80,9 +85,14 @@ elif choice == str("f"):
             URL = "https://api.github.com/users/" + i
             r = requests.get(url = URL, headers = headers)
             data = r.json()
+            URL = "https://api.github.com/users/" + i + "/repos"
+            r = requests.get(url = URL, headers=headers)
+            user_repos = r.json()
+            languages = [i["language"] for i in user_repos if i["language"] != None if i["language"] != "Makefile"]   # searchnig languages
+            langs_counted = {i: f"{round(languages.count(i)/len(languages)*100, 2)}%" for i in set(languages)}
             readout = {'Username': data['login'], 'Full Name': data['name'], 'Email': data['email'],
-                   'Location': data['location'], 'Company': data['company'], 'Hireable Status': data['hireable'],
-                   'Profile Summary': 'https://profile-summary-for-github.com/user/' + data['login']}
+                        'Location': data['location'], 'Company': data['company'], 'Hireable Status': data['hireable'],
+                        'Languages': langs_counted, 'Profile Summary': 'https://profile-summary-for-github.com/user/' + data['login']}
             if not writer:
                 writer = csv.DictWriter(filename, delimiter = ";", fieldnames = readout.keys())
             writer.writerow(readout)
@@ -116,9 +126,14 @@ elif choice == str("mr"):
             URL = "https://api.github.com/users/" + i
             r = requests.get(url = URL, headers = headers)
             data = r.json()
+            URL = "https://api.github.com/users/" + i + "/repos"
+            r = requests.get(url = URL, headers=headers)
+            user_repos = r.json()
+            languages = [i["language"] for i in user_repos if i["language"] != None if i["language"] != "Makefile"]   # searchnig languages
+            langs_counted = {i: f"{round(languages.count(i)/len(languages)*100, 2)}%" for i in set(languages)}
             readout = {'Username': data['login'], 'Full Name': data['name'], 'Email': data['email'],
-                   'Location': data['location'], 'Company': data['company'], 'Hireable Status': data['hireable'],
-                   'Profile Summary': 'https://profile-summary-for-github.com/user/' + data['login']}
+                        'Location': data['location'], 'Company': data['company'], 'Hireable Status': data['hireable'],
+                        'Languages': langs_counted, 'Profile Summary': 'https://profile-summary-for-github.com/user/' + data['login']}
             if not writer:
                 writer = csv.DictWriter(filename, delimiter=';', fieldnames=readout.keys())
             writer.writerow(readout)
@@ -153,9 +168,14 @@ elif choice == str("mf"):
             URL = "https://api.github.com/users/" + i
             r = requests.get(url = URL, headers = headers)
             data = r.json()
+            URL = "https://api.github.com/users/" + i + "/repos"
+            r = requests.get(url = URL, headers=headers)
+            user_repos = r.json()
+            languages = [i["language"] for i in user_repos if i["language"] != None if i["language"] != "Makefile"]   # searchnig languages
+            langs_counted = {i: f"{round(languages.count(i)/len(languages)*100, 2)}%" for i in set(languages)}
             readout = {'Username': data['login'], 'Full Name': data['name'], 'Email': data['email'],
-                   'Location': data['location'], 'Company': data['company'], 'Hireable Status': data['hireable'],
-                   'Profile Summary': 'https://profile-summary-for-github.com/user/' + data['login']}
+                        'Location': data['location'], 'Company': data['company'], 'Hireable Status': data['hireable'],
+                        'Languages': langs_counted, 'Profile Summary': 'https://profile-summary-for-github.com/user/' + data['login']}
             if not writer:
                 writer = csv.DictWriter(filename, delimiter = ";", fieldnames = readout.keys())
             writer.writerow(readout)
