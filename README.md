@@ -1,5 +1,6 @@
 #### [Создать токен](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line)
 Скопировать токен в `token.txt`, файл должен находится в одной директории с исполняемым скриптом
+
 Или скопировать токен в код исполняемого скрипта:
 `headers = {"Authorization": "Token " +  "yourabcdefgh0123token"}`
 
