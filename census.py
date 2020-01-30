@@ -39,7 +39,7 @@ if choice == str("r"):
         writer = None 
         for i in tqdm(names):
             URL = "https://api.github.com/users/" + i
-            r = requests.get(url = URL)
+            r = requests.get(url = URL, headers = headers)
             data = r.json()
             URL = "https://api.github.com/users/" + i + "/repos"
             r = requests.get(url = URL, headers = headers)
@@ -110,7 +110,7 @@ elif choice == str("mr"):
     custom_url = str(input("""[repo]: custom URL 
                               [https://api.github.com/repos/:owner/:repo/collaborators]
                               Insert here: """))
-    r = requests.get(url = custom_url, headers=headers)
+    r = requests.get(url = custom_url, headers = headers)
     collaborators = r.json()
     
     while "next" in r.links.keys():
@@ -151,7 +151,7 @@ elif choice == str("mf"):
     custom_url = str(input("""[fork]: custom URL 
                               [https://api.github.com/repos/:owner/:repo/forks]
                               Insert here: """))
-    r = requests.get(url = custom_url, headers=headers)
+    r = requests.get(url = custom_url, headers = headers)
     forkers = r.json()
 
     while "next" in r.links.keys():
