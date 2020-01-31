@@ -17,11 +17,14 @@ Or just copy your token directly into the code:
 * You can type/paste URL of the forks, try this for example: `https://github.com/tarantool/tarantool/network/members`
 * Input the name of CSV-file, it will appear and save in the program directory
 
+### IMPORTANT NOTE
+Sometimes you may recieve an error in fork mode. It happens because current link autoconfig make URL following rule: user/repo, but it might be also repo/repo. So just use manual configure mode for now. It will be fixed soon
+
 You can also manually surf through GitHub API and create your own links accodrind to the following structure: `/repos/:owner/:repo/forks` and `/repos/:owner/:repo/contributors`
 
 This script requiers [Python3](https://www.python.org/), [Requests module](https://2.python-requests.org/en/master/), [tqdm module](https://github.com/tqdm/tqdm)
 
-#### If you want to make it easily executable on linux:
+### If you want to make it easily executable on linux:
 Make a new empty `census.py` file in the directory where you want to store it with `touch census.py` command
 
 Add `#!/usr/bin/python3` at the top of the script
