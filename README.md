@@ -18,7 +18,7 @@ Or just copy your token directly into the code:
 * Input the name of CSV-file, it will appear and save in the program directory
 
 ### IMPORTANT NOTE
-Sometimes you may recieve an error in fork mode. It happens because current link autoconfig make URL following rule: user/repo, but it might be also repo/repo. So just use manual configure mode for now. It will be fixed soon
+Sometimes you may recieve an error in fork mode. It happens because current link autoconfig make URL by the following rule: `user/repo`, but some forks may work under the rule: `repo/repo`. So just use manual configure mode for now. It will be fixed soon
 
 You can also manually surf through GitHub API and create your own links accodrind to the following structure: `/repos/:owner/:repo/forks` and `/repos/:owner/:repo/contributors`
 
