@@ -21,16 +21,23 @@
 
 #### If you want to make it easily executable on linux:
 Make a new empty `census.py` file in the directory where you want to store it with `touch census.py` command
-add `#!/usr/bin/env python` at the top of the script
+
+Add `#!/usr/bin/env python` at the top of the script
+
 Copy all of the code to the new file & save it
 
 Add a Directory with your script to `$PATH:` permanently by running the following in Terminal:`nano ~/.bashrc`
+
 Add in the end of the file `PATH=$PATH:~/"YOUR NEW PATH TO SCRIPT`, mark it with `##PATH##` for further needs
+
 Save & exit wtih: `ctrl+O` `ctrl+X`
+
 Run: `source ~/.bashrc`
+
 Confirm changes: `echo $PATH`
+
 You'll see the path to your new directory in the end of the line
 
-Now you can launch it in Terminal from every location by running: `census.py` 
+Now you can launch it in Terminal from every directory by running: `census.py` 
 
 
