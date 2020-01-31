@@ -32,7 +32,7 @@ Run: `chmod +x census.py`
 
 Add a Directory with your script to `$PATH:` permanently by running the following in Terminal:`nano ~/.bashrc`
 
-Add in the end of the file `PATH=$PATH:~/"YOUR NEW PATH TO SCRIPT`, mark it with `##PATH##` for further needs
+Add in the end of the file `PATH=$PATH:~/YOUR NEW PATH TO SCRIPT`, mark it with `##PATH##` for further needs
 
 Save & exit wtih: `ctrl+O` `ctrl+X`
 
