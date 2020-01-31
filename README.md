@@ -26,6 +26,8 @@ Add `#!/usr/bin/env python` at the top of the script
 
 Copy all of the code to the new file & save it
 
+Run: `chmod +x census.py` 
+
 Add a Directory with your script to `$PATH:` permanently by running the following in Terminal:`nano ~/.bashrc`
 
 Add in the end of the file `PATH=$PATH:~/"YOUR NEW PATH TO SCRIPT`, mark it with `##PATH##` for further needs
