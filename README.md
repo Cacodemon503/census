@@ -1,20 +1,50 @@
-#### [Создать токен](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line)
-Скопировать токен в `token.txt`, файл должен находится в одной директории с исполняемым скриптом
+## Census: simple GitHub repo & fork parser 
 
-Или скопировать токен в код исполняемого скрипта:
+#### [Create your token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line)
+Copy token to `token.txt`, file must be in the same directory with an executable script
+
+Or just copy your token directly into the code:
 
 `headers = {"Authorization": "Token " +  "yourabcdefgh0123token"}`
 
-#### Запустить:
-* Открыть cmd/powershell/terminal
-* `cd ~/Путь до директории с файлом`
+#### Launch instructions:
+* Open cmd/powershell/terminal
+* `cd ~/path to script directory`
 * `python3 ./census.py`
-* Следовать инструкции скрипта
+* Follow further program instructions
 
-* Ввести URL интересующего репозитория, например: `https://github.com/kmike/pymorphy2/graphs/contributors`
-* Ввести URL интересующего списка форков, например: `https://github.com/tarantool/tarantool/network/members`
-* Ввести название CSV-файла, файл будет сохранен в директории с программой
+* You can type/paste URL of the repo, just try: `https://github.com/kmike/pymorphy2/graphs/contributors`
+* You can type/paste URL of the forks, try this for example: `https://github.com/tarantool/tarantool/network/members`
+* Input the name of CSV-file, it will appear and save in the program directory
 
-Можно также вводить кастомные ссылки на основе: `/repos/:owner/:repo/forks` и `/repos/:owner/:repo/contributors`
+### IMPORTANT NOTE
+Sometimes you may recieve an error in fork mode. It happens because current link autoconfig make URL by the following rule: `user/repo`, but some forks may work under the rule: `repo/repo`. So just use manual configure mode for now. It will be fixed soon
 
-Для работы скрипта нужен [Python3](https://www.python.org/), [модуль Requests](https://2.python-requests.org/en/master/), [модуль tqdm](https://github.com/tqdm/tqdm)
+You can also manually surf through GitHub API and create your own links accodrind to the following structure: `/repos/:owner/:repo/forks` and `/repos/:owner/:repo/contributors`
+
+This script requiers [Python3](https://www.python.org/), [Requests module](https://2.python-requests.org/en/master/), [tqdm module](https://github.com/tqdm/tqdm)
+
+### If you want to make it easily executable on linux:
+Make a new empty `census.py` file in the directory where you want to store it with `touch census.py` command
+
+Add `#!/usr/bin/python3` at the top of the script
+
+Copy all of the code to the new file & save it
+
+Run: `chmod +x census.py` 
+
+Add a Directory with your script to `$PATH:` permanently by running the following in Terminal:`nano ~/.bashrc`
+
+Add in the end of the file `PATH=$PATH:~/YOUR NEW PATH TO SCRIPT`, mark it with `##PATH##` for further needs
+
+Save & exit wtih: `ctrl+O` `ctrl+X`
+
+Run: `source ~/.bashrc`
+
+Confirm changes: `echo $PATH`
+
+You'll see the path to your new directory in the end of the line
+
+Now you can launch it in Terminal from every directory by running: `census.py` 
+
+
