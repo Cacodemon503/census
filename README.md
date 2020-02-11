@@ -3,7 +3,7 @@
 #### [Create your token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line)
 Copy token to `token.txt`, file must be in the same directory with an executable script
 
-IF YOU'LL HAVE ANY ISSUES WITH TRYTING TO LAUNCH IT:
+IF YOU'LL HAVE ANY ISSUES WITH TRYING TO LAUNCH IT:
 
 Just copy your token and build it directly into the code:
 
