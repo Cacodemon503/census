@@ -5,7 +5,7 @@ import urllib.parse
 import requests
 from tqdm import tqdm
 import csv
-import threading
+# import threading
 import colorama
 colorama.init()
 
@@ -27,8 +27,9 @@ def start_menu():
     {green}▐▄▌─▀─▀─▐▄▌{endfgr}               [{yellow}repo{endfgr}]
     {green}  █─▄▄▄─█  ▄▄{endfgr}             [{yellow}fork{endfgr}]
     {green}  ▄█▄▄▄█▄ ▐  ▌{endfgr}            [{yellow}anon{endfgr}]
-    {green}▄█▀█████▐▌ ▀ ▐{endfgr}            [{green}auth{endfgr}]
+    {green}▄█▀█████▐▌ ▀ ▐{endfgr}            [{green}orgs{endfgr}]
     {green}▀ ▄██▀██▀█▀▄▄▀{endfgr}            [{green}help{endfgr}]
+                              [{green}auth{endfgr}]
                               [{red}quit{endfgr}]\n""")
     choice = str(input(f'{yellow}>>>{endfgr} ')).lower().strip(' ')
     return choice
@@ -39,6 +40,8 @@ def executor(choice):
         repo_parser()
     elif choice == 'fork':
         fork_parser()
+    elif choice == 'orgs':
+        orgs_parser()
     elif choice == 'auth':
         auth()
     elif choice in {'help', 'h', '-h', '--help'}:
@@ -232,8 +235,11 @@ def line_flusher():
 
 
 def help_info():
+    red = '\033[91m'
+    endcolor = '\033[0m'
     line_flusher()
-    print('TEST')
+    print('This script uses GitHub REST API methods `GET` with python requests module.')
+    print(f'Learn more about GitHub API here: {red}https://docs.github.com/en/rest{endcolor}\n')
     print('press [Enter] to escape')
     esc = input('')
     if esc is None:
@@ -319,17 +325,19 @@ def repo_parser():
 {yellow}>>>{endfgr} """))
         if custom_url != '../':
             try:
+                stage()
                 r = requests.get(url=custom_url, headers=headers)
-                forkers = r.json()
+                collaborators = r.json()
+
                 while "next" in r.links.keys():
                     r = requests.get(r.links["next"]["url"], headers=headers)
-                    forkers.extend(r.json())
-                owners = [i["owner"] for i in forkers]
-                names = [i["login"] for i in owners]
+                    collaborators.extend(r.json())
+
+                names = [i["login"] for i in collaborators]
                 csv_writer(names, start)
             except (KeyError, ValueError):
                 print('Exception: something bad just occured: broken url')
-                time.sleep(0.5)
+                time.sleep(1)
                 line_flusher()
                 line_flusher()
                 line_flusher()
@@ -453,6 +461,7 @@ def fork_parser():
 {yellow}>>>{endfgr} """))
         if custom_url != '../':
             try:
+                stage()
                 r = requests.get(url=custom_url, headers=headers)
                 forkers = r.json()
                 while "next" in r.links.keys():
@@ -576,6 +585,116 @@ def anonymous_writer():
 
     else:
         main()
+
+# ---------------------------- ORGS PARSER --------------------------- #
+
+
+def orgs_parser():
+    yellow = '\033[93m'
+    endfgr = '\033[39m'
+    start = time.monotonic()
+    f = open(resource_path('token.txt'), "r")
+    token = f.read()
+    headers = {'Authorization': 'token ' + str(token)}
+    line_flusher()
+    print('[repo]: url type: auto/custom\n')
+    link_type = input(f'{yellow}>>>{endfgr} ')
+    if link_type in {'auto', 'a', 'aut'}:
+        line_flusher()
+        line_flusher()
+        line_flusher()
+        print('[repo]: url type: auto')
+
+        user_input = urllib.parse.urlsplit(str(input(f"\n{yellow}>>>{endfgr} "))).path
+        if user_input == '../':
+            line_flusher()
+            line_flusher()
+            orgs_parser()
+        else:
+            try:
+                stage()
+                fragment = user_input.split("/")
+
+                URL = "https://api.github.com/orgs/" + str(fragment[2]) + "/public_members"
+                r = requests.get(url=URL, headers=headers)
+                people = r.json()
+
+                while "next" in r.links.keys():
+                    r = requests.get(r.links["next"]["url"], headers=headers)
+                    people.extend(r.json())
+
+                names = [i["login"] for i in people]
+                csv_writer(names, start)
+            except (KeyError, ValueError, IndexError, TypeError):
+                # stop_threads = True
+                # t1.join()
+                print('Exception: something bad just occured: broken url')
+                time.sleep(1)
+                line_flusher()
+                line_flusher()
+                line_flusher()
+                line_flusher()
+                repo_parser()
+            except(requests.exceptions.ConnectionError):
+                red = '\033[91m'
+                endcolor = '\033[0m'
+                print(f'{red}NO INTERNET CONNECTION{endcolor}')
+                time.sleep(2)
+                line_flusher()
+                line_flusher()
+                line_flusher()
+                line_flusher()
+                repo_parser()
+
+    elif link_type in {'manual', 'man', 'm', 'c', 'cus', 'custom'}:
+        line_flusher()
+        line_flusher()
+        line_flusher()
+        line_flusher()
+        custom_url = str(input(f"""
+[repo]: url type: custom
+[example]: https://api.github.com/repos/:owner/:repo/collaborators
+{yellow}>>>{endfgr} """))
+        if custom_url != '../':
+            try:
+                stage()
+                r = requests.get(url=URL, headers=headers)
+                people = r.json()
+
+                while "next" in r.links.keys():
+                    r = requests.get(r.links["next"]["url"], headers=headers)
+                    people.extend(r.json())
+
+                names = [i["login"] for i in people]
+                csv_writer(names, start)
+            except (KeyError, ValueError):
+                print('Exception: something bad just occured: broken url')
+                time.sleep(1)
+                line_flusher()
+                line_flusher()
+                line_flusher()
+                repo_parser()
+            except(requests.exceptions.ConnectionError):
+                red = '\033[91m'
+                endcolor = '\033[0m'
+                print(f'{red}NO INTERNET CONNECTION{endcolor}')
+                time.sleep(2)
+                line_flusher()
+                line_flusher()
+                line_flusher()
+                repo_parser()
+        else:
+            line_flusher()
+            line_flusher()
+            repo_parser()
+
+    elif link_type == '../':
+        main()
+
+    else:
+        line_flusher()
+        line_flusher()
+        repo_parser()
 
 
 # ---------------------------- CSV WRITER --------------------------- #

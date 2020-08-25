@@ -3,8 +3,8 @@
 block_cipher = None
 
 
-a = Analysis(['census-new.py'],
-             pathex=['C:\\Users\\Mi\\Desktop\\Census\\census'],
+a = Analysis(['census.py'],
+             pathex=['C:\\Users\\Mi\\Desktop\\Census'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -21,7 +21,7 @@ exe = EXE(pyz,
           a.scripts,
           [],
           exclude_binaries=True,
-          name='census-new',
+          name='census',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
@@ -34,4 +34,4 @@ coll = COLLECT(exe,
                strip=False,
                upx=True,
                upx_exclude=[],
-               name='census-new')
+               name='census')
