@@ -597,13 +597,13 @@ def orgs_parser():
     token = f.read()
     headers = {'Authorization': 'token ' + str(token)}
     line_flusher()
-    print('[repo]: url type: auto/custom\n')
+    print('[orgs]: url type: auto/custom\n')
     link_type = input(f'{yellow}>>>{endfgr} ')
     if link_type in {'auto', 'a', 'aut'}:
         line_flusher()
         line_flusher()
         line_flusher()
-        print('[repo]: url type: auto')
+        print('[orgs]: url type: auto')
 
         user_input = urllib.parse.urlsplit(str(input(f"\n{yellow}>>>{endfgr} "))).path
         if user_input == '../':
@@ -614,7 +614,6 @@ def orgs_parser():
             try:
                 stage()
                 fragment = user_input.split("/")
-
                 URL = "https://api.github.com/orgs/" + str(fragment[2]) + "/public_members"
                 r = requests.get(url=URL, headers=headers)
                 people = r.json()
@@ -634,7 +633,7 @@ def orgs_parser():
                 line_flusher()
                 line_flusher()
                 line_flusher()
-                repo_parser()
+                orgs_parser()
             except(requests.exceptions.ConnectionError):
                 red = '\033[91m'
                 endcolor = '\033[0m'
@@ -644,7 +643,7 @@ def orgs_parser():
                 line_flusher()
                 line_flusher()
                 line_flusher()
-                repo_parser()
+                orgs_parser()
 
     elif link_type in {'manual', 'man', 'm', 'c', 'cus', 'custom'}:
         line_flusher()
@@ -673,7 +672,7 @@ def orgs_parser():
                 line_flusher()
                 line_flusher()
                 line_flusher()
-                repo_parser()
+                orgs_parser()
             except(requests.exceptions.ConnectionError):
                 red = '\033[91m'
                 endcolor = '\033[0m'
@@ -682,11 +681,11 @@ def orgs_parser():
                 line_flusher()
                 line_flusher()
                 line_flusher()
-                repo_parser()
+                orgs_parser()
         else:
             line_flusher()
             line_flusher()
-            repo_parser()
+            orgs_parser()
 
     elif link_type == '../':
         main()
@@ -694,7 +693,7 @@ def orgs_parser():
     else:
         line_flusher()
         line_flusher()
-        repo_parser()
+        orgs_parser()
 
 
 # ---------------------------- CSV WRITER --------------------------- #
