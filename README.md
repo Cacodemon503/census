@@ -2,8 +2,7 @@
 
 #### Census is a simple repo forks & contributors parser for GitHub. It can parse contributors related to specific repo, including anonymous contributors, users who forked specific repo & people related to specific orgs. All the data it gets using official GiThub REST API is stored in public access.
 
-
-#### > 👉 I now have a standalone version of this script assembled with pyinstaller for Windows OS [HERE](https://github.com/Cacodemon503/census/tree/stand-alone)
+> 👉 I now have a standalone version of this script assembled with pyinstaller for Windows OS [HERE](https://github.com/Cacodemon503/census/tree/stand-alone)
 
 #### [Create your token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line)
 Copy token to `token.txt`, file must be in the same directory with an executable script
