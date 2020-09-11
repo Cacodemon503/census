@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['census.py'],
-             pathex=['C:\\Users\\Mi\\Desktop\\Census'],
+             pathex=['C:\\Users\\Mi\\Desktop\\Новая папка'],
              binaries=[],
              datas=[],
              hiddenimports=[],

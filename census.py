@@ -1,3 +1,4 @@
+from collections import defaultdict
 import sys
 import os
 import time
@@ -30,6 +31,7 @@ def start_menu():
     {green}▄█▀█████▐▌ ▀ ▐{endfgr}            [{green}orgs{endfgr}]
     {green}▀ ▄██▀██▀█▀▄▄▀{endfgr}            [{green}help{endfgr}]
                               [{green}auth{endfgr}]
+                              [{green}:csv{endfgr}]
                               [{red}quit{endfgr}]\n""")
     choice = str(input(f'{yellow}>>>{endfgr} ')).lower().strip(' ')
     return choice
@@ -50,6 +52,8 @@ def executor(choice):
         quit()
     elif choice in {'anon', 'a', 'anonymous'}:
         anonymous_writer()
+    elif choice in {'csv', ':csv'}:
+        csv_checker()
     else:
         main()
 
@@ -291,7 +295,8 @@ def repo_parser():
                     r = requests.get(r.links["next"]["url"], headers=headers)
                     collaborators.extend(r.json())
 
-                names = [i["login"] for i in collaborators]
+                names = [i["login"] for i in collaborators if type(i) == dict]
+
                 csv_writer(names, start)
             except (KeyError, ValueError, IndexError, TypeError):
                 # stop_threads = True
@@ -333,7 +338,7 @@ def repo_parser():
                     r = requests.get(r.links["next"]["url"], headers=headers)
                     collaborators.extend(r.json())
 
-                names = [i["login"] for i in collaborators]
+                names = [i["login"] for i in collaborators if type(i) == dict]
                 csv_writer(names, start)
             except (KeyError, ValueError):
                 print('Exception: something bad just occured: broken url')
@@ -399,7 +404,7 @@ def fork_parser():
                     str(fragment[1]) + "/" + str(fragment[2]) + "/forks"
                 r = requests.get(url=URL, headers=headers)
                 forkers = r.json()
-
+                # print(URL)
                 if not forkers:
                     # stop_threads = True
                     # t1.join()
@@ -415,7 +420,7 @@ def fork_parser():
                         forkers.extend(r.json())
 
                     owners = [i["owner"] for i in forkers]
-                    names = [i["login"] for i in owners]
+                    names = [i["login"] for i in owners if type(i) == dict]
                     print('Successfully done')
                     csv_writer(names, start)
 
@@ -424,15 +429,23 @@ def fork_parser():
                     forkers.extend(r.json())
 
                 owners = [i["owner"] for i in forkers]
-                names = [i["login"] for i in owners]
+                names = [i["login"] for i in owners if type(i) == dict]
                 print('Successfully done')
                 # stop_threads = True
                 # t1.join()
                 csv_writer(names, start)
-            except (KeyError, ValueError, IndexError, TypeError):
+            except (KeyError, ValueError, IndexError):
                 # stop_threads = True
                 # t1.join()
                 print('Exception: something bad just occured: broken url')
+                time.sleep(1)
+                line_flusher()
+                line_flusher()
+                line_flusher()
+                line_flusher()
+                fork_parser()
+            except (TypeError):
+                print('Exception: NoneType object found in user login')
                 time.sleep(1)
                 line_flusher()
                 line_flusher()
@@ -468,11 +481,21 @@ def fork_parser():
                     r = requests.get(r.links["next"]["url"], headers=headers)
                     forkers.extend(r.json())
                 owners = [i["owner"] for i in forkers]
-                names = [i["login"] for i in owners]
+                print(owners)
+                names = [i["login"] for i in owners if type(i) == dict]
+                print(names)
                 csv_writer(names, start)
-            except (KeyError, ValueError, IndexError, TypeError):
+            except (KeyError, ValueError, IndexError):
                 print('Exception: something bad just occured: broken url')
                 time.sleep(1)
+                line_flusher()
+                line_flusher()
+                line_flusher()
+                fork_parser()
+            except (TypeError):
+                print('Exception: NoneType object found in user login')
+                time.sleep(1)
+                line_flusher()
                 line_flusher()
                 line_flusher()
                 line_flusher()
@@ -756,6 +779,173 @@ def csv_writer(names, start):
         main()
     else:
         main()
+
+
+#----------------------CSV CHECKER-------------------------#
+
+
+#----------------------------------------------------------#
+#----------------------API STATUS--------------------------#
+#----------------------------------------------------------#
+
+
+def api_warning(status):
+    r = '\033[31m'
+    y = '\033[93m'
+    g = '\033[32m'
+    e = '\033[0m'
+    if status == 'API RATE LIMITS EXCEEDED':
+        answer = f'''{r}WARNING:{e} {y}API RATE LIMITS EXCEEDED{e}
+Some users were not checked(see the last one saved in ".txt" file).\n'''
+        return answer
+    else:
+        answer = f'{g}OK{e}'
+        return answer
+#----------------------------------------------------------#
+#----------------------------------------------------------#
+
+
+#----------------------------------------------------------#
+#----------------------CSV FUNC----------------------------#
+#----------------------------------------------------------#
+
+
+def csv_checker():
+    line_flusher()
+    r = '\033[31m'
+    y = '\033[93m'
+    g = '\033[32m'
+    e = '\033[0m'
+    try:
+        print('[csv reader]: Set the file path')
+        red = '\033[91m'
+        yellow = '\033[93m'
+        endcolor = '\033[0m'
+        fpath = input(f'{y}>>>{e} ')
+        line_flusher()
+        line_flusher()
+        print('[csv reader]: Set the file name')
+        fname = input(f'{y}>>>{e} ')
+
+        columns = defaultdict(list)
+
+        with open(f'{fpath}/{fname}.csv', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                for (k, v) in row.items():
+                    columns[k].append(v)
+
+        names = columns[str(input("Set the valid column name: "))]
+
+        f = open(resource_path('token.txt'), "r")
+        token = f.read()
+        headers = {'Authorization': 'token ' + str(token)}
+        base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+        print(f'{red}CSV:{endcolor} {yellow}file path{endcolor}')
+        print('File will be saved at:', base_path)
+        p_choice = input('Set the path manualy? [y/n]: ').lower().strip(' ')
+        if p_choice in {'y', 'yes'}:
+            file_path = input(f'Set the path: ').strip(' ')
+        elif p_choice in {'n', 'no'}:
+            file_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+        else:
+            line_flusher()
+            line_flusher()
+            line_flusher()
+            csv_checker()
+
+        file_name = input(f'Enter file name: ')
+        print('Successfully done')
+        with open(f'{file_path}/{file_name}.txt', 'w', encoding='utf-8') as filename:
+            # os.system('cls')
+            print(f'{red}CSV:{endcolor} {yellow}saving users{endcolor}')
+            writer = None
+            start = time.monotonic()
+            for i in tqdm(names):
+                URL = "https://api.github.com/users/" + i
+                r = requests.get(url=URL, headers=headers)
+                data = r.json()
+                headers_info = r.headers
+
+                if headers_info['Status'] == "200 OK":
+                    URL = "https://api.github.com/users/" + i + "/repos"
+                    r = requests.get(url=URL, headers=headers)
+                    user_repos = r.json()
+                    languages = [i["language"] for i in user_repos if i["language"] !=
+                                 None if i["language"] != "Makefile"]
+                    langs_counted = {
+                        i: f"{round(languages.count(i)/len(languages)*100, 2)}%" for i in set(languages)}
+                    readout = {'Username': data['login'], 'Full Name': data['name'], 'Email': data['email'],
+                               'Location': data['location'], 'Company': data['company'], 'Hireable Status': data['hireable'],
+                               'Languages': langs_counted, 'Profile Summary': 'https://profile-summary-for-github.com/user/' + data['login']}
+                    if not writer:
+                        writer = csv.DictWriter(filename, delimiter=';', fieldnames=readout.keys())
+                    writer.writerow(readout)
+                    status = 'OK'
+                    api_warning(status)
+
+                elif headers_info['Status'] == '404 Not Found':
+                    readout = {'Username': i, 'Full Name': 'null', 'Email': 'null',
+                               'Location': 'null', 'Company': 'null', 'Hireable Status': 'null',
+                               'Languages': 'null', 'Profile Summary': 'null'}
+                    if not writer:
+                        writer = csv.DictWriter(filename, delimiter=';', fieldnames=readout.keys())
+                    writer.writerow(readout)
+                    status = 'OK'
+                    api_warning(status)
+
+                elif headers_info['Status'] == '401 Unauthorized':
+                    red = '\033[91m'
+                    endcolor = '\033[0m'
+                    print(f'{red}INVALID TOKEN{endcolor}')
+                    time.sleep(2)
+                    csv_checker()
+
+                elif headers_info['Status'] == '403 Forbidden':
+                    readout = {'Username': i, 'Full Name': 'API exceeded', 'Email': 'API exceeded',
+                               'Location': 'API exceeded', 'Company': 'API exceeded', 'Hireable Status': 'API exceeded',
+                               'Languages': 'API exceeded', 'Profile Summary': 'API exceeded'}
+                    if not writer:
+                        writer = csv.DictWriter(filename, delimiter=';', fieldnames=readout.keys())
+                    writer.writerow(readout)
+                    status = 'API RATE LIMITS EXCEEDED'
+                    api_warning(status)
+
+        answer = api_warning(status)
+        print('API RATE LIMITS STATUS:', answer)
+        print(str("Users checked: ") + str(len(names)))
+        print("Writing completed")
+        result = time.monotonic() - start
+        print("Program time: " + str(result) + " seconds.")
+        print(f'\n{red}press [Enter] to escape{endcolor}')
+        esc = input('')
+        if esc is None:
+            main()
+        else:
+            main()
+
+    except UnicodeDecodeError:
+        line_flusher()
+        line_flusher()
+        print('Bad file format')
+        time.sleep(2)
+        csv_checker()
+    except FileNotFoundError:
+        line_flusher()
+        line_flusher()
+        print('Wrong file path or name')
+        time.sleep(2)
+        csv_checker()
+    except UnboundLocalError:
+        line_flusher()
+        line_flusher()
+        print('Wrong column name')
+        time.sleep(2)
+        csv_checker()
+    except KeyboardInterrupt:
+        quit()
+#----------------------------------------------------------#
+#----------------------------------------------------------#
 
 # ---------------------------- MAIN LOGIC ---------------------------- #
 
